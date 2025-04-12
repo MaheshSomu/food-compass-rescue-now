@@ -87,8 +87,7 @@ git push origin feature/new-feature
 
 - Open a Pull Request for review.
 
-License
-This project is licensed under the MIT License.
+
 
 
 
