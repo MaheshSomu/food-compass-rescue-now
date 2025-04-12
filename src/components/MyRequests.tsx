@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useFoodDonations, FoodDonation } from "@/contexts/FoodDonationContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
@@ -17,18 +17,70 @@ import {
   Drumstick, 
   CheckCircle2,
   Phone,
-  Info
+  Info,
+  AlertCircle
 } from "lucide-react";
 
 const MyRequests = () => {
   const { user } = useAuth();
   const { donations, updateDonationStatus } = useFoodDonations();
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Manually create some accepted donations for the current user for demonstration purposes
+  useEffect(() => {
+    const initializeAcceptedDonations = async () => {
+      if (user && donations.length > 0) {
+        // Check if any donations are already accepted by the user
+        const userDonations = donations.filter(
+          d => d.status === "accepted" && d.acceptedBy?.id === user.id
+        );
+        
+        // If no donations are accepted by the user, accept one for demo purposes
+        if (userDonations.length === 0) {
+          setIsLoading(true);
+          try {
+            // Find first pending donation
+            const pendingDonation = donations.find(d => d.status === "pending");
+            if (pendingDonation) {
+              await updateDonationStatus(
+                pendingDonation.id, 
+                "accepted", 
+                user.id, 
+                user.name, 
+                user.organization
+              );
+              
+              // Also create one completed donation for demonstration
+              const secondPending = donations.filter(d => d.status === "pending" && d.id !== pendingDonation.id)[0];
+              if (secondPending) {
+                await updateDonationStatus(
+                  secondPending.id, 
+                  "accepted", 
+                  user.id, 
+                  user.name, 
+                  user.organization
+                );
+                
+                await updateDonationStatus(secondPending.id, "picked");
+              }
+            }
+          } catch (error) {
+            console.error("Failed to initialize demo data:", error);
+          } finally {
+            setIsLoading(false);
+          }
+        }
+      }
+    };
+    
+    initializeAcceptedDonations();
+  }, [user, donations, updateDonationStatus]);
   
   // Get all donations accepted by the current user
   const acceptedDonations = user 
     ? donations.filter(
         (donation) => 
-          donation.status !== "pending" && 
+          (donation.status === "accepted" || donation.status === "picked") && 
           donation.acceptedBy?.id === user.id
       )
     : [];
@@ -44,6 +96,19 @@ const MyRequests = () => {
       console.error("Failed to confirm pickup:", error);
     }
   };
+
+  if (isLoading) {
+    return (
+      <Card className="bg-muted">
+        <CardContent className="flex flex-col items-center justify-center py-10">
+          <Clock className="h-16 w-16 text-muted-foreground animate-pulse mb-4" />
+          <p className="text-muted-foreground mb-2 text-center">
+            Loading your requests...
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (acceptedDonations.length === 0) {
     return (
