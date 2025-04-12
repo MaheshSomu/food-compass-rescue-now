@@ -33,9 +33,6 @@ Prerequisites
 - Install MongoDB locally or set up a cloud-based MongoDB Atlas cluster.
 
 Steps
-- Clone this repository:git clone <YOUR_GIT_URL>
-
-- Navigate to the project directory:cd <YOUR_PROJECT_NAME>
 
 - Install dependencies:npm install
 
