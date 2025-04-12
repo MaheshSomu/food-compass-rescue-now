@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/components/ui/use-toast";
-import { User, At, Building, MapPin, Phone, Shield } from "lucide-react";
+import { User, AtSign, Building, MapPin, Phone, Shield } from "lucide-react";
 
 const Profile = () => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -112,7 +112,7 @@ const Profile = () => {
                       <div>
                         <h2 className="text-lg font-semibold">{user.name}</h2>
                         <p className="text-muted-foreground">{user.email}</p>
-                        <Badge variant="outline" className="mt-1">
+                        <Badge variant="outline">
                           <Shield className="h-3 w-3 mr-1" />
                           {roleLabel}
                         </Badge>
@@ -135,7 +135,7 @@ const Profile = () => {
                       
                       <div className="space-y-2">
                         <Label htmlFor="email" className="flex items-center">
-                          <At className="h-4 w-4 mr-1 text-zerowaste-primary" />
+                          <AtSign className="h-4 w-4 mr-1 text-zerowaste-primary" />
                           Email
                         </Label>
                         <Input
@@ -309,12 +309,15 @@ const Profile = () => {
   );
 };
 
+// Updated Badge component to accept className prop
 const Badge = ({ 
   children, 
-  variant = "default" 
+  variant = "default",
+  className = "" // Added className with default empty string
 }: { 
   children: React.ReactNode; 
-  variant?: "outline" | "default" 
+  variant?: "outline" | "default";
+  className?: string; // Added className prop type
 }) => {
   const getVariantClasses = () => {
     switch (variant) {
@@ -326,7 +329,7 @@ const Badge = ({
   };
   
   return (
-    <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getVariantClasses()}`}>
+    <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getVariantClasses()} ${className}`}>
       {children}
     </div>
   );
