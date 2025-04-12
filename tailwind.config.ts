@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,15 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// ZeroWaste custom colors
+				zerowaste: {
+					primary: '#4CAF50',
+					secondary: '#2E7D32',
+					accent: '#FF9800',
+					background: '#F5F7F4',
+					text: '#333333',
+					textLight: '#666666',
 				}
 			},
 			borderRadius: {
@@ -94,3 +104,4 @@ export default {
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+
