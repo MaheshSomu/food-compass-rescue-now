@@ -1,4 +1,4 @@
-Food Compass - Rescue Now
+Project Title:Food Compass - Rescue Now
 Project Overview
 Food Compass - Rescue Now is a platform designed to combat food waste and help those in need. This project visualizes food rescue locations on a dynamic map and provides tools for effective resource management.
 
