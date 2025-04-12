@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import FoodDonationCard from "@/components/FoodDonationCard";
+import MyRequests from "@/components/MyRequests";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,19 +16,26 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFoodDonations, FoodDonation } from "@/contexts/FoodDonationContext";
 import { toast } from "@/components/ui/use-toast";
+import { Progress } from "@/components/ui/progress";
 import { 
   MapPin, 
   Clock, 
   Filter, 
   Leaf, 
   Drumstick, 
-  CheckCircle2 
+  CheckCircle2,
+  ListFilter,
+  List,
+  Map,
+  Calendar,
+  Package,
+  ArrowUpRight 
 } from "lucide-react";
 
 const ReceiverDashboard = () => {
@@ -47,6 +55,14 @@ const ReceiverDashboard = () => {
   
   // Accepted donations by this receiver
   const [acceptedDonations, setAcceptedDonations] = useState<FoodDonation[]>([]);
+
+  // Dashboard stats
+  const [dashboardStats, setDashboardStats] = useState({
+    availableDonations: 0,
+    nearbyDonations: 0,
+    expiringToday: 0,
+    totalSaved: 0,
+  });
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -111,6 +127,26 @@ const ReceiverDashboard = () => {
       );
       setAcceptedDonations(accepted);
     }
+
+    // Calculate dashboard stats
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    // Calculate stats
+    const stats = {
+      availableDonations: donations.filter(d => d.status === 'pending').length,
+      nearbyDonations: Math.min(5, donations.filter(d => d.status === 'pending').length), // Simulated nearby
+      expiringToday: donations.filter(d => {
+        const expiry = new Date(d.expiry);
+        return d.status === 'pending' && expiry >= today && expiry < tomorrow;
+      }).length,
+      totalSaved: acceptedDonations.length,
+    };
+
+    setDashboardStats(stats);
+    
   }, [donations, searchTerm, foodTypeFilter, onlyShowVeg, maxDistance, onlyShowAvailable, user]);
 
   const handleAcceptDonation = async (id: string) => {
@@ -166,50 +202,122 @@ const ReceiverDashboard = () => {
       <div className="flex-1 p-6">
         <div className="flex flex-col space-y-6">
           <div>
-            <h1 className="text-3xl font-bold">Find Food</h1>
+            <h1 className="text-3xl font-bold">Receiver Dashboard</h1>
             <p className="text-zerowaste-textLight mt-1">
-              Browse available food donations near you
+              Find and manage food donations
             </p>
           </div>
           
-          <Tabs defaultValue="map">
+          {/* Dashboard Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card>
+              <CardContent className="flex flex-col items-center justify-center pt-6">
+                <div className="rounded-full bg-blue-100 p-3 mb-4">
+                  <Package className="h-8 w-8 text-blue-600" />
+                </div>
+                <CardTitle className="text-4xl font-bold text-center mb-2">
+                  {dashboardStats.availableDonations}
+                </CardTitle>
+                <p className="text-muted-foreground text-center">Available Donations</p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="flex flex-col items-center justify-center pt-6">
+                <div className="rounded-full bg-green-100 p-3 mb-4">
+                  <MapPin className="h-8 w-8 text-green-600" />
+                </div>
+                <CardTitle className="text-4xl font-bold text-center mb-2">
+                  {dashboardStats.nearbyDonations}
+                </CardTitle>
+                <p className="text-muted-foreground text-center">Nearby Donations</p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="flex flex-col items-center justify-center pt-6">
+                <div className="rounded-full bg-orange-100 p-3 mb-4">
+                  <Clock className="h-8 w-8 text-orange-600" />
+                </div>
+                <CardTitle className="text-4xl font-bold text-center mb-2">
+                  {dashboardStats.expiringToday}
+                </CardTitle>
+                <p className="text-muted-foreground text-center">Expiring Today</p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="flex flex-col items-center justify-center pt-6">
+                <div className="rounded-full bg-purple-100 p-3 mb-4">
+                  <CheckCircle2 className="h-8 w-8 text-purple-600" />
+                </div>
+                <CardTitle className="text-4xl font-bold text-center mb-2">
+                  {dashboardStats.totalSaved}
+                </CardTitle>
+                <p className="text-muted-foreground text-center">Donations Saved</p>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Food Rescue Impact</CardTitle>
+              <CardDescription>
+                Track your contribution to reducing food waste
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <Label>Food Saved</Label>
+                    <span className="text-sm text-muted-foreground">
+                      {acceptedDonations.length * 2.5}kg
+                    </span>
+                  </div>
+                  <Progress value={Math.min(100, acceptedDonations.length * 5)} className="h-2" />
+                </div>
+                
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <Label>CO₂ Prevented</Label>
+                    <span className="text-sm text-muted-foreground">
+                      {acceptedDonations.length * 4.2}kg
+                    </span>
+                  </div>
+                  <Progress value={Math.min(100, acceptedDonations.length * 8)} className="h-2" />
+                </div>
+                
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <Label>Water Saved</Label>
+                    <span className="text-sm text-muted-foreground">
+                      {acceptedDonations.length * 100}L
+                    </span>
+                  </div>
+                  <Progress value={Math.min(100, acceptedDonations.length * 10)} className="h-2" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Tabs defaultValue="browse">
             <TabsList className="grid w-full max-w-md grid-cols-2">
-              <TabsTrigger value="map">Map View</TabsTrigger>
-              <TabsTrigger value="list">List View</TabsTrigger>
+              <TabsTrigger value="browse" className="flex items-center">
+                <ListFilter className="h-4 w-4 mr-2" />
+                Browse Donations
+              </TabsTrigger>
+              <TabsTrigger value="requests" className="flex items-center">
+                <List className="h-4 w-4 mr-2" />
+                My Requests
+              </TabsTrigger>
             </TabsList>
             
-            <TabsContent value="map" className="pt-4">
-              <Card className="mb-6">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg font-medium">
-                    Food Donations Map
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="bg-muted h-[50vh] rounded-md flex items-center justify-center">
-                    <p className="text-muted-foreground">
-                      Map view will be implemented with Google Maps or OpenStreetMap integration.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <h2 className="text-xl font-semibold mt-8 mb-4">Nearby Donations</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredDonations.slice(0, 3).map((donation) => (
-                  <FoodDonationCard 
-                    key={donation.id}
-                    donation={donation}
-                    onAccept={handleAcceptDonation}
-                  />
-                ))}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="list" className="pt-4">
+            <TabsContent value="browse" className="pt-4">
               <Card className="mb-6">
                 <CardHeader className="pb-4">
-                  <CardTitle className="text-lg font-medium">
+                  <CardTitle className="flex items-center">
+                    <Filter className="mr-2 h-5 w-5" />
                     Filter Donations
                   </CardTitle>
                 </CardHeader>
@@ -285,11 +393,26 @@ const ReceiverDashboard = () => {
                 </CardContent>
               </Card>
               
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold">Available Donations</h2>
-                <Badge variant="outline" className="px-2 py-1">
-                  {filteredDonations.length} found
-                </Badge>
+              <div className="flex justify-between mb-6">
+                <div className="flex space-x-2">
+                  <Button variant="outline" size="sm" className="flex items-center">
+                    <List className="h-4 w-4 mr-2" />
+                    List View
+                  </Button>
+                  <Button variant="outline" size="sm" className="flex items-center">
+                    <Map className="h-4 w-4 mr-2" />
+                    Map View
+                  </Button>
+                  <Button variant="outline" size="sm" className="flex items-center">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Calendar
+                  </Button>
+                </div>
+                <div className="flex items-center">
+                  <Badge variant="outline" className="px-2 py-1">
+                    {filteredDonations.length} found
+                  </Badge>
+                </div>
               </div>
               
               {filteredDonations.length === 0 ? (
@@ -321,58 +444,10 @@ const ReceiverDashboard = () => {
                   ))}
                 </div>
               )}
-              
-              {acceptedDonations.length > 0 && (
-                <>
-                  <h2 className="text-xl font-semibold mt-10 mb-4">Your Accepted Donations</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {acceptedDonations.map((donation) => (
-                      <Card key={donation.id} className="relative overflow-hidden">
-                        <div className="absolute top-0 right-0 m-2">
-                          <Badge className="bg-blue-500">
-                            {donation.status === "accepted" ? "Ready for pickup" : "Picked up"}
-                          </Badge>
-                        </div>
-                        <CardContent className="pt-6">
-                          <h3 className="font-semibold text-lg mb-2">{donation.title}</h3>
-                          <div className="space-y-2 text-sm mb-4">
-                            <div className="flex items-center gap-2">
-                              <MapPin className="h-4 w-4 text-zerowaste-primary" />
-                              <span className="text-muted-foreground">{donation.location.address}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Clock className="h-4 w-4 text-zerowaste-primary" />
-                              <span className="text-muted-foreground">
-                                Expires: {new Date(donation.expiry).toLocaleString()}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              {donation.foodType === 'veg' ? (
-                                <Leaf className="h-4 w-4 text-green-600" />
-                              ) : (
-                                <Drumstick className="h-4 w-4 text-amber-600" />
-                              )}
-                              <span className="text-muted-foreground">
-                                {donation.foodType === 'veg' ? 'Vegetarian' : 'Non-vegetarian'}
-                              </span>
-                            </div>
-                          </div>
-                          
-                          {donation.status === "accepted" && (
-                            <Button 
-                              className="w-full bg-zerowaste-primary hover:bg-zerowaste-secondary"
-                              onClick={() => handlePickupDonation(donation.id)}
-                            >
-                              <CheckCircle2 className="mr-2 h-4 w-4" />
-                              Confirm Pickup
-                            </Button>
-                          )}
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </>
-              )}
+            </TabsContent>
+            
+            <TabsContent value="requests" className="pt-4">
+              <MyRequests />
             </TabsContent>
           </Tabs>
         </div>
