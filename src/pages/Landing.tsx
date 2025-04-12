@@ -71,7 +71,7 @@ const Landing = () => {
               <div className="absolute -top-6 -left-6 w-24 h-24 bg-zerowaste-accent/20 rounded-full z-0"></div>
               <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-zerowaste-primary/20 rounded-full z-0"></div>
               <img 
-                src="/placeholder.svg" 
+                src="https://images.unsplash.com/photo-1593113598332-cd59a0c3a9a1?q=80&w=1000&auto=format&fit=crop"
                 alt="Food Donation" 
                 className="w-full h-auto rounded-lg shadow-lg z-10 relative"
               />
@@ -142,25 +142,57 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Impact Section */}
+      {/* Impact Section with Additional Food Images */}
       <section className="py-16 px-4 bg-zerowaste-primary/10">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-10 text-zerowaste-text">Our Impact</h2>
+        <div className="container mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12 text-zerowaste-text">Our Impact</h2>
           
-          <div className="grid sm:grid-cols-3 gap-8">
-            <div className="p-6">
+          <div className="grid sm:grid-cols-3 gap-8 mb-12">
+            <div className="p-6 text-center">
               <h3 className="text-4xl font-bold text-zerowaste-primary mb-2">5,000+</h3>
               <p className="text-zerowaste-textLight">Meals Rescued</p>
             </div>
             
-            <div className="p-6">
+            <div className="p-6 text-center">
               <h3 className="text-4xl font-bold text-zerowaste-primary mb-2">2,500+</h3>
               <p className="text-zerowaste-textLight">People Fed</p>
             </div>
             
-            <div className="p-6">
+            <div className="p-6 text-center">
               <h3 className="text-4xl font-bold text-zerowaste-primary mb-2">3.2 tons</h3>
               <p className="text-zerowaste-textLight">CO₂ Emissions Prevented</p>
+            </div>
+          </div>
+          
+          {/* Food Donation Images Gallery */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="rounded-lg overflow-hidden shadow-md">
+              <img 
+                src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=500&auto=format&fit=crop" 
+                alt="Food donation item" 
+                className="w-full h-48 object-cover"
+              />
+            </div>
+            <div className="rounded-lg overflow-hidden shadow-md">
+              <img 
+                src="https://images.unsplash.com/photo-1608032364895-84e0dcca9fa1?q=80&w=500&auto=format&fit=crop" 
+                alt="Food donation item" 
+                className="w-full h-48 object-cover"
+              />
+            </div>
+            <div className="rounded-lg overflow-hidden shadow-md">
+              <img 
+                src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=500&auto=format&fit=crop" 
+                alt="Food donation item" 
+                className="w-full h-48 object-cover"
+              />
+            </div>
+            <div className="rounded-lg overflow-hidden shadow-md">
+              <img 
+                src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=500&auto=format&fit=crop" 
+                alt="Food donation item" 
+                className="w-full h-48 object-cover"
+              />
             </div>
           </div>
         </div>
