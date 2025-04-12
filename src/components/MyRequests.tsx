@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { 
   MapPin, 
   Clock, 
@@ -97,6 +98,28 @@ const MyRequests = () => {
     }
   };
 
+  // Food donation image mapping 
+  const getFoodImage = (donation: FoodDonation) => {
+    const imageMap: Record<string, string> = {
+      '1': 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=500&auto=format&fit=crop',
+      '2': 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=500&auto=format&fit=crop',
+      '3': 'https://images.unsplash.com/photo-1495195134817-aeb325a55b65?q=80&w=500&auto=format&fit=crop',
+    };
+    
+    if (imageMap[donation.id]) {
+      return imageMap[donation.id];
+    }
+    
+    // Fallback based on food type and status
+    if (donation.status === "picked") {
+      return 'https://images.unsplash.com/photo-1584473457409-88fecd127cfd?q=80&w=500&auto=format&fit=crop';
+    } else if (donation.foodType === 'veg') {
+      return 'https://images.unsplash.com/photo-1608032364895-84e0dcca9fa1?q=80&w=500&auto=format&fit=crop';
+    } else {
+      return 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=500&auto=format&fit=crop';
+    }
+  };
+
   if (isLoading) {
     return (
       <Card className="bg-muted">
@@ -141,6 +164,15 @@ const MyRequests = () => {
                 </div>
                 <CardContent className="pt-6">
                   <h3 className="font-semibold text-lg mb-2">{donation.title}</h3>
+                  <div className="mb-4 rounded-md overflow-hidden">
+                    <AspectRatio ratio={16/9}>
+                      <img
+                        src={getFoodImage(donation)}
+                        alt={donation.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </AspectRatio>
+                  </div>
                   <div className="space-y-2 text-sm mb-4">
                     <div className="flex items-center gap-2">
                       <MapPin className="h-4 w-4 text-zerowaste-primary" />
@@ -197,6 +229,15 @@ const MyRequests = () => {
                 </div>
                 <CardContent className="pt-6">
                   <h3 className="font-semibold text-lg mb-2">{donation.title}</h3>
+                  <div className="mb-4 rounded-md overflow-hidden">
+                    <AspectRatio ratio={16/9}>
+                      <img
+                        src={getFoodImage(donation)}
+                        alt={donation.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </AspectRatio>
+                  </div>
                   <div className="space-y-2 text-sm mb-4">
                     <div className="flex items-center gap-2">
                       <MapPin className="h-4 w-4 text-zerowaste-primary" />

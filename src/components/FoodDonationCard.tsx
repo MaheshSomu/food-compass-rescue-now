@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Info, Leaf, Drumstick } from "lucide-react";
 import { FoodDonation } from "@/contexts/FoodDonationContext";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface FoodDonationCardProps {
   donation: FoodDonation;
@@ -62,6 +63,26 @@ const FoodDonationCard: React.FC<FoodDonationCardProps> = ({
   // Determine urgency
   const isUrgent = hoursRemaining <= 6 && hoursRemaining > 0;
   
+  // Food donation image mapping based on ID or food type
+  const getFoodImage = () => {
+    const imageMap: Record<string, string> = {
+      '1': 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=500&auto=format&fit=crop',
+      '2': 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=500&auto=format&fit=crop',
+      '3': 'https://images.unsplash.com/photo-1495195134817-aeb325a55b65?q=80&w=500&auto=format&fit=crop',
+    };
+    
+    if (imageMap[donation.id]) {
+      return imageMap[donation.id];
+    }
+    
+    // Fallback based on food type
+    if (donation.foodType === 'veg') {
+      return 'https://images.unsplash.com/photo-1608032364895-84e0dcca9fa1?q=80&w=500&auto=format&fit=crop';
+    } else {
+      return 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=500&auto=format&fit=crop';
+    }
+  };
+  
   return (
     <Card className={`food-donation-card ${isUrgent ? 'border-red-400' : ''}`}>
       <CardHeader className="pb-2">
@@ -75,11 +96,13 @@ const FoodDonationCard: React.FC<FoodDonationCardProps> = ({
       </CardHeader>
       <CardContent className="pb-2">
         <div className="aspect-video rounded-md overflow-hidden bg-muted mb-4">
-          <img
-            src={donation.images[0] || '/placeholder.svg'}
-            alt={donation.title}
-            className="w-full h-full object-cover"
-          />
+          <AspectRatio ratio={16/9}>
+            <img
+              src={getFoodImage()}
+              alt={donation.title}
+              className="w-full h-full object-cover"
+            />
+          </AspectRatio>
         </div>
         
         <div className="space-y-2 text-sm">

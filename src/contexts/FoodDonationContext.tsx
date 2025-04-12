@@ -52,7 +52,9 @@ const MOCK_DONATIONS: FoodDonation[] = [
     foodType: 'veg',
     perishable: true,
     expiry: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours from now
-    images: ['/placeholder.svg'],
+    images: [
+      'https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=500&auto=format&fit=crop'
+    ],
     location: {
       lat: 40.712776,
       lng: -74.005974,
@@ -73,7 +75,9 @@ const MOCK_DONATIONS: FoodDonation[] = [
     foodType: 'veg',
     perishable: true,
     expiry: new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString(), // 12 hours from now
-    images: ['/placeholder.svg'],
+    images: [
+      'https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=500&auto=format&fit=crop'
+    ],
     location: {
       lat: 40.732776,
       lng: -74.015974,
@@ -94,7 +98,9 @@ const MOCK_DONATIONS: FoodDonation[] = [
     foodType: 'veg',
     perishable: true,
     expiry: new Date(Date.now() + 36 * 60 * 60 * 1000).toISOString(), // 36 hours from now
-    images: ['/placeholder.svg'],
+    images: [
+      'https://images.unsplash.com/photo-1495195134817-aeb325a55b65?q=80&w=500&auto=format&fit=crop'
+    ],
     location: {
       lat: 40.752776,
       lng: -74.025974,
