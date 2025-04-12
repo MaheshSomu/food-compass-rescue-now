@@ -4,14 +4,18 @@ Food Compass - Rescue Now
 
 
 Project Overview
+
 Food Compass - Rescue Now is a platform designed to combat food waste and help those in need. This project visualizes food rescue locations on a dynamic map and provides tools for effective resource management.
 
 Features
+
 - Interactive Maps: Visualize food rescue locations dynamically.
 - Modern UI: Built with shadcn-ui and Tailwind CSS for clean and responsive design.
 - Database Integration: Efficient data management using MongoDB.
 - TypeScript Integration: Ensures type safety and robust code.
+
 Technologies Used
+
 This project utilizes the following technologies:
 - Vite: A fast development environment.
 - React: Enables modular and reusable component-based UI development.
@@ -23,6 +27,7 @@ This project utilizes the following technologies:
 
 
 Installation Guide
+
 Prerequisites
 - Install Node.js and npm using nvm.
 - Install MongoDB locally or set up a cloud-based MongoDB Atlas cluster.
