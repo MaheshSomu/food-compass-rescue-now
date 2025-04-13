@@ -1,6 +1,6 @@
 Project Title:
 
-Food Compass - Rescue Now
+Food management
 
 
 Project Overview
